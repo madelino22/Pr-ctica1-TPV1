@@ -1,0 +1,4 @@
+﻿  Game.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\crtdbg.h(303,1): warning C4005: '_malloca': redefinición de macro
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\malloc.h(122): message : vea la definición anterior de '_malloca'
+  HolaSDL.vcxproj -> D:\Segundo\TPV\Práctica 1\ProyectosSDL\bin\HolaSDLDebug.exe
