@@ -1,15 +1,18 @@
 #include "GameMap.h"
+#include "Game.h"
 
-GameMap::GameMap(int nFils, int nCols, Texture* textWall, Texture* textVit, Texture* textFood) {
+GameMap::GameMap(int nFils, int nCols, Game* g, Texture* textWall, Texture* textVit, Texture* textFood) {
 	fils = nFils;
 	cols = nCols;
 	celdasMapa = new MapCell * [fils];
 	for (int x = 0; x < fils; x++) {
 		celdasMapa[x] = new MapCell[cols];
 	}
+	game = g;
 	textureWall = textWall;
 	textureVit = textVit;
 	textureFood = textFood;
+
 	//Al construir creear el mapa vacío
 	for (int x = 0; x < fils; x++) {
 		for (int y = 0; y < cols; y++) {
@@ -17,13 +20,15 @@ GameMap::GameMap(int nFils, int nCols, Texture* textWall, Texture* textVit, Text
 		}
 	}
 
+	casillaH = WIN_HEIGHT / fils;
+	casillaW = WIN_WIDTH / cols;
+
 }
 
 
 void GameMap::render() const {
 
-	int casillaH = 600 / fils;
-	int casillaW = 800 / cols;
+	
 	for (int x = 0; x < fils; x++) {
 		for (int y = 0; y < cols; y++) {
 			MapCell tipo = celdasMapa[x][y];

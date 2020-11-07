@@ -54,9 +54,9 @@ void Game::render() const {
 	SDL_RenderClear(renderer);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	mapa->render();
-	//pacman->render();
+	pacman->render();
 	SDL_RenderPresent(renderer);
-	SDL_Delay(50);
+	SDL_Delay(200);
 
 }
 
@@ -66,7 +66,7 @@ void Game::handleEvents() {
 	while (SDL_PollEvent(&event) && !exit) {
 		if (event.type == SDL_QUIT) exit = true;
 		pacman->handleEvents(event);
-
+		
 	}
 }
 
@@ -97,7 +97,7 @@ void Game::LeeMapa() {
 
 	cin >> fils >> cols;
 
-	mapa = new GameMap(fils, cols, textures[0], textures[2], textures[3]);
+	mapa = new GameMap(fils, cols,this, textures[0], textures[2], textures[3]);
 	//para cada celda se lle su numero, se traduce a enum, y se añade al array de GameMap
 	for (int x = 0; x < fils; x++) {
 		for (int y = 0; y < cols; y++) {
@@ -106,6 +106,11 @@ void Game::LeeMapa() {
 			MapCell tipoCelda = devuelveEnum(nCelda);
 			
 			mapa->SetCelda(x, y, tipoCelda);
+
+			if (nCelda == 9) {
+				//Creación del pacman
+				pacman = new Pacman(Vector2D(y, x), this, textures[1]);
+			}
 		}
 	}
 
@@ -123,4 +128,15 @@ void Game::LeeMapa() {
 #ifndef DOMJUDGE // para dejar todo como estaba al principio
 	std::cin.rdbuf(cinbuf);
 #endif
+}
+
+
+int Game::GetNFils() const {
+
+	return mapa->fils;
+}
+
+int Game::GetNCols() const {
+
+	return mapa->cols;
 }

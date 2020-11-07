@@ -5,25 +5,35 @@
 #include "checkML.h"
 #include <iostream>
 #include "Texture.h"
+#include "Vector2D.h"
 
 using namespace std;
 
 using uint = unsigned int;
+class Game; // para que pueda guardar el juego y no haya inclusiones circulares
+
+
 class Pacman
 {
+	friend class Game;
+
 private:
-	uint w = 0; // width
-	uint h = 0; // height
-	uint x = 0; uint y = 0; // Posición de esquina superior izqda
-	int dirX = 10; int dirY = 0; // Dirección de movimiento
+
+	Vector2D posAct, posIni;
+	Vector2D dir;
+	Game* game;
+
+	
+	
+	
 	Texture* texture = nullptr;
 public:
 	Pacman() {}
-	Pacman(uint w, uint h, uint x, uint y, Texture* t) :
-		w(w), h(h), x(x), y(y), texture(t) {}
+	Pacman(Vector2D pIni,Game* g, Texture* t) :
+		posIni(pIni), posAct(pIni), game(g), texture(t),  dir(Vector2D(1,0)) {}
 	~Pacman() {}
 	void render() const;
 	void update();
-	void handleEvents(SDL_Event& event);
+	void handleEvents(const SDL_Event& event);
 };
 

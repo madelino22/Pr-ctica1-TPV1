@@ -34,8 +34,8 @@ void firstTest() {
 
 int main2() {
 	Game game = Game();
-	game.render();
-	SDL_Delay(5000);
+	game.run();
+	
 	return 0;
 }
 

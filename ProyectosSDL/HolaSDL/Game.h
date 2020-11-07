@@ -36,6 +36,9 @@ private:
 public:
 	Game();
 	~Game();
+
+	int GetNFils() const;
+	int GetNCols() const;
 	void run();
 	void render() const;
 	void handleEvents();
