@@ -39,6 +39,7 @@ public:
 
 	int GetNFils() const;
 	int GetNCols() const;
+	bool NextCell(const Vector2D& dir,const Vector2D& pos) const;
 	void run();
 	void render() const;
 	void handleEvents();

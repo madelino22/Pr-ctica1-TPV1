@@ -31,6 +31,9 @@ Game::Game() {
 	LeeMapa();
 }
 Game::~Game() {
+
+	delete pacman;
+	delete mapa;//invoca al destructor de mapa y todo lo que lleva consigo
 	for (uint i = 0; i < NUM_TEXTURES; i++) delete textures[i];
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
@@ -139,4 +142,30 @@ int Game::GetNFils() const {
 int Game::GetNCols() const {
 
 	return mapa->cols;
+}
+
+
+
+bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
+	bool celdaVacia = true;
+	Vector2D  nextCell = pos;
+	if (dir.GetY() == -1) {
+		nextCell.SetY((pos.GetY() - 1 + mapa->fils) % mapa->fils);
+		if (mapa->GetCelda(nextCell.GetY(), nextCell.GetX()) == Wall) celdaVacia = false;
+	}
+	else if (dir.GetY() == 1) {
+		nextCell.SetY((pos.GetY() + 1 + mapa->fils) % mapa->fils);
+		if (mapa->GetCelda(nextCell.GetY(), nextCell.GetX()) == Wall) celdaVacia = false;
+	}
+	else if (dir.GetX() == - 1) {
+		nextCell.SetX((pos.GetX() - 1 + mapa->fils) % mapa->fils);
+		if (mapa->GetCelda(nextCell.GetY(), nextCell.GetX()) == Wall) celdaVacia = false;
+	}
+	else if (dir.GetX() == + 1) {
+		nextCell.SetX((pos.GetX() + 1 + mapa->fils) % mapa->fils);
+		if (mapa->GetCelda(nextCell.GetY(), nextCell.GetX()) == Wall) celdaVacia = false;
+	}
+
+
+	return celdaVacia;
 }

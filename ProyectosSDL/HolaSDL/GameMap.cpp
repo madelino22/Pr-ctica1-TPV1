@@ -24,7 +24,17 @@ GameMap::GameMap(int nFils, int nCols, Game* g, Texture* textWall, Texture* text
 	casillaW = WIN_WIDTH / cols;
 
 }
+GameMap::~GameMap() {
 
+	//no se necesita borrar las texturas ya que son punteros que luego los borrará game
+	//El primer bucle destruye cada array que sería cada fila
+    for (int x = 0; x < cols; x++) {
+		delete[] celdasMapa[x];
+    }
+	//esto borra al columna
+	delete[] celdasMapa;
+	
+}
 
 void GameMap::render() const {
 
