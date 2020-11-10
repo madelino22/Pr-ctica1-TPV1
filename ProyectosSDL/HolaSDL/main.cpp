@@ -36,6 +36,7 @@ int main2() {
 	Game game = Game();
 	game.run();
 	
+	
 	return 0;
 }
 

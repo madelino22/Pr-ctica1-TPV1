@@ -8,6 +8,7 @@
 #include "Pacman.h"
 #include "GameMap.h"
 #include <fstream>
+#include "Ghost.h"
 
 using namespace std;
 
@@ -28,6 +29,7 @@ private:
 	// uint winWidth, winHeight; // También podrían estar aquí
 	Pacman* pacman = nullptr;
 	GameMap* mapa = nullptr;
+	Ghost** ghosts = nullptr;
 	bool exit = false;
 	Texture* textures[NUM_TEXTURES];
 

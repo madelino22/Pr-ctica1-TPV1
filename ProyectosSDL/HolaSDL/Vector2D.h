@@ -16,6 +16,9 @@ public:
 	void SetY(int b) { y = b; }
 	void SetX(int a) { x = a; }
 
+	void Invierte();
+	void Perpendicular();
+
 	Vector2D operator+(const Vector2D& otroVector) const;
 	Vector2D operator-(const Vector2D& otroVector) const;
 	int  operator*(const Vector2D& otroVector) const;

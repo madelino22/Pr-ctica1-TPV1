@@ -9,6 +9,8 @@ struct Texturas {
 };
 
 Game::Game() {
+
+	//srand(time(nullptr));
 	// We first initialize SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
 	window = SDL_CreateWindow("Juego con clases", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -22,6 +24,7 @@ Game::Game() {
 		textures[i]->load(texturas.file[i], texturas.fils[i], texturas.cols[i]);
 	}
 
+	ghosts = new Ghost*[4];
 	//textures[0]->load("..\\images\\background1.png");
 	//textures[1]->load("..\\images\\dog.png", 1, 6);
 	// We finally create the game objects
@@ -52,12 +55,19 @@ void Game::run() {
 void Game::update() {
 
 	pacman->update();
+	for (int x = 0; x < 4; x++) {
+		ghosts[x]->update();
+	}
 }
 void Game::render() const {
 	SDL_RenderClear(renderer);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	mapa->render();
 	pacman->render();
+	for (int x = 0; x < 4; x++) {
+		ghosts[x]->render();
+	}
+	
 	SDL_RenderPresent(renderer);
 	SDL_Delay(200);
 
@@ -114,6 +124,12 @@ void Game::LeeMapa() {
 				//Creación del pacman
 				pacman = new Pacman(Vector2D(y, x), this, textures[1]);
 			}
+			else if (nCelda >= 5 && nCelda<= 8) {
+				ghosts[nCelda- 5] = new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5);
+				//Es la misma textura que el pacman ya que es una spritesheet
+				//En el método render ya se seleccionara cual es
+			}
+			
 		}
 	}
 
