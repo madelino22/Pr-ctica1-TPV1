@@ -1,4 +1,6 @@
 #pragma once
+
+
 class Vector2D
 {
 private:
@@ -24,5 +26,5 @@ public:
 	int  operator*(const Vector2D& otroVector) const;
 	Vector2D operator*(const int& num) const;
 	bool operator==(const Vector2D& otroVector) const;
-}; 
+}; using Point2D = Vector2D;
 

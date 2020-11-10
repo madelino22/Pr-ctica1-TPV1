@@ -19,7 +19,7 @@ class Pacman
 
 private:
 
-	Vector2D posAct, posIni;
+	Point2D posAct, posIni;
 	Vector2D dir, newDir;
 	Game* game;
 
@@ -29,7 +29,7 @@ private:
 	Texture* texture = nullptr;
 public:
 	Pacman() {}
-	Pacman(Vector2D pIni,Game* g, Texture* t) :
+	Pacman(Point2D pIni,Game* g, Texture* t) :
 		posIni(pIni), posAct(pIni), game(g), texture(t),  dir(Vector2D(1,0)) , newDir(Vector2D(1, 0)) {}
 	~Pacman() {}
 	void render() const;
