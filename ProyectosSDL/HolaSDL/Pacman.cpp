@@ -1,6 +1,8 @@
 #include "Pacman.h"
 #include "Game.h"
 
+
+
 void Pacman::render() const {
 	
 	int casillaH = WIN_HEIGHT / game->GetNFils();
@@ -16,6 +18,17 @@ void Pacman::render() const {
 	texture->renderFrame(destRect, 0, 10);
 }
 
+
+void Pacman::comerAlimento() {
+	if (game->contenidoCelda(posAct.GetY(), posAct.GetX()) == Food) {
+		game->Comida();
+		game->EmptyCell(posAct.GetY(), posAct.GetX());
+	}
+	else if (game->contenidoCelda(posAct.GetY(), posAct.GetX()) == Vitamins) {
+
+	}
+}
+
 void Pacman::update() {
 	int nCols = game->GetNCols();
 	int nFils = game->GetNFils();
@@ -28,6 +41,8 @@ void Pacman::update() {
 		posAct.SetX((posAct.GetX() + dir.GetX() + nCols) % nCols);
 		posAct.SetY((posAct.GetY() + dir.GetY() + nFils) % nFils);
 	}
+
+	comerAlimento();
 	
 }
 

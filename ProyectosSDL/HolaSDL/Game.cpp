@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include <ctime>
 
 
 struct Texturas {
@@ -10,7 +10,7 @@ struct Texturas {
 
 Game::Game() {
 
-	//srand(time(nullptr));
+	srand(time(nullptr));
 	// We first initialize SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
 	window = SDL_CreateWindow("Juego con clases", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -30,6 +30,8 @@ Game::Game() {
 	// We finally create the game objects
 	//dog = new Dog(WIN_WIDTH / 8, WIN_HEIGHT / 8, 200, 200, textures[1]);
 	
+	comida = 0;
+	vidas = 3;
 
 	LeeMapa();
 }
@@ -46,15 +48,39 @@ Game::~Game() {
 
 
 void Game::run() {
+	uint32_t startTime, frameTime;
+	startTime = SDL_GetTicks();
+
 	while (!exit) { // Falta el control de tiempo
 		handleEvents();
-		update();
+		frameTime = SDL_GetTicks() - startTime;
+		if (frameTime >= FRAME_RATE) {
+			update();
+			startTime = SDL_GetTicks();
+
+		}
+		
 		render();
+
+		//meter las vidas también
+		if (comida <= 0) {
+			exit = true;
+			ganado = true;
+		}
+		else if (vidas <= 0) {
+			exit = true;
+		}
 	}
+
+	if (ganado)
+		cout << "Has ganado!\n";
+	else
+		cout << "Has perdido :(\n";
 }
 void Game::update() {
 
 	pacman->update();
+	
 	for (int x = 0; x < 4; x++) {
 		ghosts[x]->update();
 	}
@@ -69,7 +95,6 @@ void Game::render() const {
 	}
 	
 	SDL_RenderPresent(renderer);
-	SDL_Delay(200);
 
 }
 
@@ -84,21 +109,6 @@ void Game::handleEvents() {
 }
 
 
-//En función del número qu ese le de devuelve el tipo de celda correspondiente de tipo enum
-MapCell Game::devuelveEnum(int x) {
-	MapCell celda;
-	//El cuatro se ve que no hace nada
-	if (x == 1)
-		celda = Wall;
-	else if (x == 2)
-		celda = Food;
-	else if (x == 3)
-		celda = Vitamins;
-	else if (x == 0 || x >= 4)//de momento añado el 4 ya que no se para que es
-		celda = Empty;
-
-	return celda;
-}
 
 void Game::LeeMapa() {
 #ifndef DOMJUDGE
@@ -116,10 +126,9 @@ void Game::LeeMapa() {
 		for (int y = 0; y < cols; y++) {
 			int nCelda;
 			cin >> nCelda;
-			MapCell tipoCelda = devuelveEnum(nCelda);
-			
-			mapa->SetCelda(x, y, tipoCelda);
+			mapa->SetCelda(x, y,(MapCell) nCelda);
 
+			if ((MapCell)nCelda == Food)comida++;
 			if (nCelda == 9) {
 				//Creación del pacman
 				pacman = new Pacman(Vector2D(y, x), this, textures[1]);
@@ -134,7 +143,7 @@ void Game::LeeMapa() {
 	}
 
 	
-	
+	//estos x y van cambiados ya que en los bucles van del revés
 	for (int x = 0; x < fils; x++) {
 		for (int y = 0; y < cols; y++) {
 			cout << mapa->GetCelda(x, y) << " ";
@@ -185,3 +194,10 @@ bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
 
 	return celdaVacia;
 }
+
+void Game::pacManRespawn() {
+	pacman->posAct = pacman->posIni;
+	vidas--;
+}
+
+

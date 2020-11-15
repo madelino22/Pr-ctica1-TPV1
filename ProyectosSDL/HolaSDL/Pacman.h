@@ -24,14 +24,14 @@ private:
 	Game* game;
 
 	
-	
-	
 	Texture* texture = nullptr;
+	void comerAlimento();
 public:
 	Pacman() {}
 	Pacman(Point2D pIni,Game* g, Texture* t) :
 		posIni(pIni), posAct(pIni), game(g), texture(t),  dir(Vector2D(1,0)) , newDir(Vector2D(1, 0)) {}
 	~Pacman() {}
+
 	void render() const;
 	void update();
 	void handleEvents(const SDL_Event& event);

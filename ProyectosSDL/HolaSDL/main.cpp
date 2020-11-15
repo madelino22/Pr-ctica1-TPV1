@@ -33,9 +33,15 @@ void firstTest() {
 }
 
 int main2() {
-	Game game = Game();
-	game.run();
+	try {
+		Game game = Game();
+		game.run();
+	}
+	catch (string& e) {
+		cout << e;
+	}
 	
+	system("pause");
 	
 	return 0;
 }

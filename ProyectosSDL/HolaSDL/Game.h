@@ -20,6 +20,7 @@ using uint = unsigned int;
 const uint WIN_WIDTH = 800;
 const uint WIN_HEIGHT = 600;
 const uint NUM_TEXTURES = 4;
+const uint32_t FRAME_RATE = 200;
 class Game
 {
 	
@@ -33,8 +34,11 @@ private:
 	bool exit = false;
 	Texture* textures[NUM_TEXTURES];
 
+	int vidas;
+	int comida;
+	bool ganado;
+
 	void LeeMapa();
-	MapCell devuelveEnum(int x);
 public:
 	Game();
 	~Game();
@@ -42,6 +46,25 @@ public:
 	int GetNFils() const;
 	int GetNCols() const;
 	bool NextCell(const Vector2D& dir,const Vector2D& pos) const;
+
+	MapCell contenidoCelda(int y, int x) const{
+		return mapa->GetCelda(y, x);
+	}
+
+	//Para que los fantasmas sepan donde está el pacman para saber si hay que comerselo o no
+	Point2D getPacManPosAct() const { return pacman->posAct; }
+
+	//lleva al pacman a la posición inicial y resta una vida, si no le quedan vidas se encarga de finalizar la partida
+	void pacManRespawn();
+	
+	void Comida() {
+		comida--;
+	};
+
+	void EmptyCell(int y, int x) {
+		mapa->SetCelda(y, x, Empty);
+	};
+
 	void run();
 	void render() const;
 	void handleEvents();

@@ -1,6 +1,21 @@
 #include "Ghost.h"
 #include "Game.h"
 
+
+
+bool Ghost::comer(Point2D posPacMan) {
+	bool comido = false;
+	if (posPacMan == posAct) {
+		//invocar método pacman de reaparecer
+		//quitar una vida
+		game->pacManRespawn();
+		comido = true;
+	}
+
+	return comido;
+}
+
+
 void Ghost::render() const {
 
 	int casillaH = WIN_HEIGHT / game->GetNFils();
@@ -46,7 +61,8 @@ void Ghost::update() {
 			tam++;
 		}
 		//primero checkeo si en la direcion que está yendo se puede,
-		//luego una de las de al lado(perpendicular) y al final la inversa a la última
+		//luego una de las de al lado(perpendicular) y al final la inversa a la última(la que era perpendicular)
+		//así siempre se chequean las direcciones que no es marcha atrás, si ninguna es posible, no queda otra que ir hacia atrás
 		if (x == 0) dirPos.Perpendicular();
 		else if (x == 1) dirPos.Invierte();
 	}
@@ -60,9 +76,10 @@ void Ghost::update() {
 		dir = posibles[nuevaDir];
 	}
 	
+	comer(game->getPacManPosAct());
 	//la suma de nCols y nFils dentro del parentesis es para que al ir en velocidad negativa y llegue al borde aparezca al otro lado tmb
 	posAct.SetX((posAct.GetX() + dir.GetX() + nCols) % nCols);
 	posAct.SetY((posAct.GetY() + dir.GetY() + nFils) % nFils);
-	
-
+	comer(game->getPacManPosAct());
+	//Come antes y depués del movimiento para evitar que se crucen sin interactuar
 }

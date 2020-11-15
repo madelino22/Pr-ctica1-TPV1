@@ -26,8 +26,7 @@ private:
 	Game* game;
 	int color;
 
-
-
+	bool comer(Point2D posPacMan);//de momento es bool pero no se usa
 
 	Texture* texture = nullptr;
 public:
