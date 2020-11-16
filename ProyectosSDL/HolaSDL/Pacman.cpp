@@ -14,25 +14,31 @@ void Pacman::render() const {
 	destRect.h = casillaH;
 	destRect.w = casillaW;
 
-	
-	texture->renderFrame(destRect, 0, 10);
+	//si está en modo caza o no tiene distinto sprite
+	if(!eating)texture->renderFrame(destRect, 0, 10);
+	else {texture->renderFrame(destRect, 0, 11);}
 }
 
 
 void Pacman::comerAlimento() {
+	//Pueden ser o vitaminas o comida
 	if (game->contenidoCelda(posAct.GetY(), posAct.GetX()) == Food) {
+		//si es comida la elmina del mapa y la resta del contador de comida restante, cuando este contador llegue a 0 el juego se acaba
 		game->Comida();
 		game->EmptyCell(posAct.GetY(), posAct.GetX());
 	}
 	else if (game->contenidoCelda(posAct.GetY(), posAct.GetX()) == Vitamins) {
-
+		//si es vitamina se pone en modo caza y se elimina esa vitamina del mapa, no hace falta recogerlas todas para ganar
+		eating = true;
+		eatingDistance = 25;
+		game->EmptyCell(posAct.GetY(), posAct.GetX());
 	}
 }
 
 void Pacman::update() {
 	int nCols = game->GetNCols();
 	int nFils = game->GetNFils();
-	//el primer if checkea si se puede ir a la última posición indicada por la pulsacíon, si se puede se cambika la dirección, si no sigue yendo a la que estaba yendo
+	//el primer if checkea si se puede ir a la última posición indicada por la pulsacíon, si se puede se cambia la dirección, si no sigue yendo a la que estaba yendo
 
 	
 	if (game->NextCell(newDir, posAct))dir = newDir;
@@ -43,6 +49,14 @@ void Pacman::update() {
 	}
 
 	comerAlimento();
+
+	if (eating) {
+		eatingDistance--;
+		if (eatingDistance <= 0) {
+			eating = false;
+			eatingDistance = 0;//por si acaso se ha puesto en negativos
+		}
+	}
 	
 }
 

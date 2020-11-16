@@ -126,7 +126,7 @@ void Game::LeeMapa() {
 		for (int y = 0; y < cols; y++) {
 			int nCelda;
 			cin >> nCelda;
-			mapa->SetCelda(x, y,(MapCell) nCelda);
+			mapa->celdasMapa[x][y] = (MapCell)nCelda;
 
 			if ((MapCell)nCelda == Food)comida++;
 			if (nCelda == 9) {
@@ -144,9 +144,9 @@ void Game::LeeMapa() {
 
 	
 	//estos x y van cambiados ya que en los bucles van del revés
-	for (int x = 0; x < fils; x++) {
-		for (int y = 0; y < cols; y++) {
-			cout << mapa->GetCelda(x, y) << " ";
+	for (int y = 0; y < fils; y++) {
+		for (int x = 0; x < cols; x++) {
+			cout << mapa->celdasMapa[y][x] << " ";
 		}
 		cout << "\n";
 	}
@@ -176,19 +176,19 @@ bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
 	Vector2D  nextCell = pos;
 	if (dir.GetY() == -1) {
 		nextCell.SetY((pos.GetY() - 1 + mapa->fils) % mapa->fils);
-		if (mapa->GetCelda(nextCell.GetY(), nextCell.GetX()) == Wall) celdaVacia = false;
+		if (mapa->celdasMapa[nextCell.GetY()][nextCell.GetX()] == Wall) celdaVacia = false;
 	}
 	else if (dir.GetY() == 1) {
 		nextCell.SetY((pos.GetY() + 1 + mapa->fils) % mapa->fils);
-		if (mapa->GetCelda(nextCell.GetY(), nextCell.GetX()) == Wall) celdaVacia = false;
+		if (mapa->celdasMapa[nextCell.GetY()][nextCell.GetX()] == Wall) celdaVacia = false;
 	}
 	else if (dir.GetX() == - 1) {
 		nextCell.SetX((pos.GetX() - 1 + mapa->fils) % mapa->fils);
-		if (mapa->GetCelda(nextCell.GetY(), nextCell.GetX()) == Wall) celdaVacia = false;
+		if (mapa->celdasMapa[nextCell.GetY()][nextCell.GetX()] == Wall) celdaVacia = false;
 	}
 	else if (dir.GetX() == + 1) {
 		nextCell.SetX((pos.GetX() + 1 + mapa->fils) % mapa->fils);
-		if (mapa->GetCelda(nextCell.GetY(), nextCell.GetX()) == Wall) celdaVacia = false;
+		if (mapa->celdasMapa[nextCell.GetY()][nextCell.GetX()] == Wall) celdaVacia = false;
 	}
 
 
@@ -197,6 +197,8 @@ bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
 
 void Game::pacManRespawn() {
 	pacman->posAct = pacman->posIni;
+	pacman->dir.SetY(0); pacman->dir.SetX(1);
+	pacman->newDir.SetY(0); pacman->newDir.SetX(1);
 	vidas--;
 }
 

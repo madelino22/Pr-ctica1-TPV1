@@ -40,10 +40,6 @@ public:
 	GameMap(int fils, int cols, Game* game, Texture* textMap, Texture* textVit, Texture* textFood);
 	~GameMap();
 
-	MapCell GetCelda(int fil, int col) const { return celdasMapa[fil][col]; };
-
-	void SetCelda(int fil, int col, MapCell cambio) { celdasMapa[fil][col] = cambio; };
-	
 	void render() const;
 
 };

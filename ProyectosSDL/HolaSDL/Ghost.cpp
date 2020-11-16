@@ -6,10 +6,17 @@
 bool Ghost::comer(Point2D posPacMan) {
 	bool comido = false;
 	if (posPacMan == posAct) {
-		//invocar método pacman de reaparecer
-		//quitar una vida
-		game->pacManRespawn();
-		comido = true;
+		if (!game->pacmanEating()) {
+			//Si los fantasmas son los que comen
+		    //invocan método pacman de reaparecer del pacman
+		    //y quitan una vida
+			game->pacManRespawn();
+			comido = true;
+		}
+		else {
+			posAct = posIni;
+		}
+		
 	}
 
 	return comido;

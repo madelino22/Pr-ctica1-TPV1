@@ -48,11 +48,14 @@ public:
 	bool NextCell(const Vector2D& dir,const Vector2D& pos) const;
 
 	MapCell contenidoCelda(int y, int x) const{
-		return mapa->GetCelda(y, x);
+		return mapa->celdasMapa[y][x];;
 	}
 
 	//Para que los fantasmas sepan donde está el pacman para saber si hay que comerselo o no
 	Point2D getPacManPosAct() const { return pacman->posAct; }
+    
+	//Este método es para indicar a los fantasmas si el pacman está comiendo, para que sepan si tienen que comerselo o ser comidos
+	bool pacmanEating() const { return pacman->eating; };
 
 	//lleva al pacman a la posición inicial y resta una vida, si no le quedan vidas se encarga de finalizar la partida
 	void pacManRespawn();
@@ -62,7 +65,7 @@ public:
 	};
 
 	void EmptyCell(int y, int x) {
-		mapa->SetCelda(y, x, Empty);
+		mapa->celdasMapa[y][x] = Empty;
 	};
 
 	void run();

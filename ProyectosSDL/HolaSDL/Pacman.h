@@ -23,13 +23,16 @@ private:
 	Vector2D dir, newDir;
 	Game* game;
 
-	
 	Texture* texture = nullptr;
+	
+	bool eating;
+	int eatingDistance;//la duración/distancia del modo caza del pacman
 	void comerAlimento();
+
 public:
 	Pacman() {}
 	Pacman(Point2D pIni,Game* g, Texture* t) :
-		posIni(pIni), posAct(pIni), game(g), texture(t),  dir(Vector2D(1,0)) , newDir(Vector2D(1, 0)) {}
+		posIni(pIni), posAct(pIni), game(g), texture(t),  dir(Vector2D(1,0)) , newDir(Vector2D(1, 0)), eating(false), eatingDistance(15) {}
 	~Pacman() {}
 
 	void render() const;
