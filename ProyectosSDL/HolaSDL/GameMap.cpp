@@ -38,7 +38,8 @@ GameMap::~GameMap() {
 
 void GameMap::render() const {
 
-	
+	//recorre todas las casillas del mapa pintandola si son muos comida o vitaminas,
+	//de la renderización del pacman y ffantasmas se encargan ellos mismos
 	for (int x = 0; x < fils; x++) {
 		for (int y = 0; y < cols; y++) {
 			MapCell tipo = celdasMapa[x][y];

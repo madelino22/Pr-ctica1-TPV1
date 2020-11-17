@@ -13,6 +13,7 @@ bool Ghost::comer(Point2D posPacMan) {
 			game->pacManRespawn();
 			comido = true;
 		}
+		//Si son comidos simplemente vuelven a la posición inicial
 		else {
 			posAct = posIni;
 		}
@@ -27,6 +28,8 @@ void Ghost::render() const {
 
 	int casillaH = WIN_HEIGHT / game->GetNFils();
 	int casillaW = WIN_WIDTH / game->GetNCols();
+
+	//creacion e inicializacion del rectángulo destino
 	SDL_Rect destRect;
 
 	destRect.x = posAct.GetX() * casillaW;
@@ -34,6 +37,8 @@ void Ghost::render() const {
 	destRect.h = casillaH;
 	destRect.w = casillaW;
 
+
+	//para saber que fantasma(color) hay que renderizar
 	switch (color){
 	case 0:
 		texture->renderFrame(destRect, 0, 0);
@@ -79,6 +84,7 @@ void Ghost::update() {
 	}
 	
 	else {
+		//selecciona al azar de entre una de las posibles
 		int nuevaDir = rand() % tam;
 		dir = posibles[nuevaDir];
 	}

@@ -4,33 +4,12 @@
 #include "checkML.h"
 #include <iostream>
 #include "Game.h"
-
+#include "Error.h"
 using namespace std;
 
 using uint = unsigned int;
 
-void firstTest() {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); // Check Memory Leaks
-	SDL_Window* window = nullptr;
-	SDL_Renderer* renderer = nullptr;
-	const uint winWidth = 800;
-	const uint winHeight = 600;
-	SDL_Init(SDL_INIT_EVERYTHING);
-	window = SDL_CreateWindow("First test with SDL", SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED, winWidth, winHeight, SDL_WINDOW_SHOWN);
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	if (window == nullptr || renderer == nullptr)
-		cout << "Error cargando SDL" << endl;
-	else {
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		SDL_RenderClear(renderer);
-		SDL_RenderPresent(renderer);
-		SDL_Delay(5000);
-	}
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
-}
+
 
 int main2() {
 	try {
@@ -40,7 +19,11 @@ int main2() {
 	catch (string& e) {
 		cout << e;
 	}
+	catch (Error e) {
+		std::cout << e.getMensaje() << endl;
+	}
 	
+	//para poder leer la consola al final
 	system("pause");
 	
 	return 0;

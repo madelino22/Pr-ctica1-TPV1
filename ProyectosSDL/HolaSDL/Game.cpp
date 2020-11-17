@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <ctime>
+#include "Error.h"
 
 
 struct Texturas {
@@ -9,6 +10,7 @@ struct Texturas {
 };
 
 Game::Game() {
+	//Constructora, crea el window y el renderer de sdl y además las texturas
 
 	srand(time(nullptr));
 	// We first initialize SDL
@@ -24,12 +26,9 @@ Game::Game() {
 		textures[i]->load(texturas.file[i], texturas.fils[i], texturas.cols[i]);
 	}
 
-	ghosts = new Ghost*[4];
-	//textures[0]->load("..\\images\\background1.png");
-	//textures[1]->load("..\\images\\dog.png", 1, 6);
-	// We finally create the game objects
-	//dog = new Dog(WIN_WIDTH / 8, WIN_HEIGHT / 8, 200, 200, textures[1]);
 	
+	//valor inicial de las variables de la partida,
+	//comida se rellena al construir el mapa en leeMapa
 	comida = 0;
 	vidas = 3;
 
@@ -51,7 +50,7 @@ void Game::run() {
 	uint32_t startTime, frameTime;
 	startTime = SDL_GetTicks();
 
-	while (!exit) { // Falta el control de tiempo
+	while (!exit) { 
 		handleEvents();
 		frameTime = SDL_GetTicks() - startTime;
 		if (frameTime >= FRAME_RATE) {
@@ -67,6 +66,8 @@ void Game::run() {
 			exit = true;
 			ganado = true;
 		}
+		//este último else se podria comprobar en el respawn del pacman 
+		//pero por claridad se deja aquí y se ejcuta en cada vuelta
 		else if (vidas <= 0) {
 			exit = true;
 		}
@@ -80,20 +81,20 @@ void Game::run() {
 void Game::update() {
 
 	pacman->update();
+	for(Ghost* g : ghosts)g->update();
 	
-	for (int x = 0; x < 4; x++) {
-		ghosts[x]->update();
-	}
 }
+
+
 void Game::render() const {
+
 	SDL_RenderClear(renderer);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	mapa->render();
 	pacman->render();
-	for (int x = 0; x < 4; x++) {
-		ghosts[x]->render();
+	for (Ghost* g : ghosts) {
+		g->render();
 	}
-	
 	SDL_RenderPresent(renderer);
 
 }
@@ -103,7 +104,7 @@ void Game::handleEvents() {
 	SDL_Event event;
 	while (SDL_PollEvent(&event) && !exit) {
 		if (event.type == SDL_QUIT) exit = true;
-		pacman->handleEvents(event);
+		else pacman->handleEvents(event);
 		
 	}
 }
@@ -113,7 +114,9 @@ void Game::handleEvents() {
 void Game::LeeMapa() {
 #ifndef DOMJUDGE
 	std::ifstream in("..\\Mapas\\level01.dat");
-	auto cinbuf = std::cin.rdbuf(in.rdbuf()); //save old buf and redirect std::cin to casos.txt
+	if (!in.is_open()) throw(Error("No se encuentra el fichero"));
+	
+	auto cinbuf = std::cin.rdbuf(in.rdbuf()); 
 #endif 
 
 	int fils, cols;
@@ -121,13 +124,15 @@ void Game::LeeMapa() {
 	cin >> fils >> cols;
 
 	mapa = new GameMap(fils, cols,this, textures[0], textures[2], textures[3]);
-	//para cada celda se lle su numero, se traduce a enum, y se añade al array de GameMap
+	//para cada celda se lee su numero y se añade al array de GameMap
 	for (int x = 0; x < fils; x++) {
 		for (int y = 0; y < cols; y++) {
 			int nCelda;
 			cin >> nCelda;
 			mapa->celdasMapa[x][y] = (MapCell)nCelda;
 
+			//si se añade una comida se suma una al contador de la comida para llevar la cuenta en la partida
+			// de cuandtas hay al principio y poder ir eliminando
 			if ((MapCell)nCelda == Food)comida++;
 			if (nCelda == 9) {
 				//Creación del pacman
@@ -143,22 +148,24 @@ void Game::LeeMapa() {
 	}
 
 	
+    //Este bucle es de debug, para ver en la consola si se ha leido bien de fichero
 	//estos x y van cambiados ya que en los bucles van del revés
-	for (int y = 0; y < fils; y++) {
+	/*for (int y = 0; y < fils; y++) {
 		for (int x = 0; x < cols; x++) {
 			cout << mapa->celdasMapa[y][x] << " ";
 		}
 		cout << "\n";
 	}
+	*/
 	
 
-	// Para restablecer entrada. Comentar para acepta el reto
 #ifndef DOMJUDGE // para dejar todo como estaba al principio
 	std::cin.rdbuf(cinbuf);
 #endif
 }
 
 
+//Estos dos metodos es para que el pacman y los fantasmas sepan el tamaño del mapa para renderizarlos y saber si se pueden mover
 int Game::GetNFils() const {
 
 	return mapa->fils;
@@ -170,10 +177,14 @@ int Game::GetNCols() const {
 }
 
 
-
+//para saber lo que hay en la siguinete casilla dependiendo de la dirección que se le pase
 bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
 	bool celdaVacia = true;
 	Vector2D  nextCell = pos;
+
+
+	//Como el pacman no se puede mover en diagonal, la direccion a la que se va a poder mover
+	//va a ser un 1 o -1 en una dirección perpendicular
 	if (dir.GetY() == -1) {
 		nextCell.SetY((pos.GetY() - 1 + mapa->fils) % mapa->fils);
 		if (mapa->celdasMapa[nextCell.GetY()][nextCell.GetX()] == Wall) celdaVacia = false;
@@ -196,10 +207,15 @@ bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
 }
 
 void Game::pacManRespawn() {
+	//se lleva al pacMan a la posicion original
 	pacman->posAct = pacman->posIni;
+	//Se reestablece las dos direcciones para que se mueva a la derecha al iniciar
 	pacman->dir.SetY(0); pacman->dir.SetX(1);
 	pacman->newDir.SetY(0); pacman->newDir.SetX(1);
+
+	//Se resta las vidas y se le muestra en pantalla al jugador
 	vidas--;
+	cout << "Vidas: " << vidas << "\n";
 }
 
 

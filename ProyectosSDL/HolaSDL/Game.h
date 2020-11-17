@@ -9,11 +9,12 @@
 #include "GameMap.h"
 #include <fstream>
 #include "Ghost.h"
+#include <array>
+
 
 using namespace std;
 
 using uint = unsigned int;
-
 
 
 
@@ -30,9 +31,10 @@ private:
 	// uint winWidth, winHeight; // También podrían estar aquí
 	Pacman* pacman = nullptr;
 	GameMap* mapa = nullptr;
-	Ghost** ghosts = nullptr;
+	array<Ghost*, 4> ghosts;
 	bool exit = false;
-	Texture* textures[NUM_TEXTURES];
+	
+	array<Texture*, NUM_TEXTURES> textures;
 
 	int vidas;
 	int comida;
@@ -60,10 +62,12 @@ public:
 	//lleva al pacman a la posición inicial y resta una vida, si no le quedan vidas se encarga de finalizar la partida
 	void pacManRespawn();
 	
+	//al comer una bola amarilla se invoca a este método
 	void Comida() {
 		comida--;
 	};
 
+	//hace que la casilla que tiene los parámetros x e y sea vacía, es para cuando se come vitamina o comida
 	void EmptyCell(int y, int x) {
 		mapa->celdasMapa[y][x] = Empty;
 	};
