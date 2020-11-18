@@ -14,7 +14,7 @@ void Pacman::render() const {
 	destRect.h = casillaH;
 	destRect.w = casillaW;
 
-	//si está en modo caza o no tiene distinto sprite
+	//si está en modo caza tiene distinto sprite
 	if(!eating)texture->renderFrame(destRect, 0, 10);
 	else {texture->renderFrame(destRect, 0, 11);}
 }

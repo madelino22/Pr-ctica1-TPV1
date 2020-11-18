@@ -28,7 +28,10 @@ GameMap::~GameMap() {
 
 	//no se necesita borrar las texturas ya que son punteros que luego los borrará game
 	//El primer bucle destruye cada array que sería cada fila
-    for (int x = 0; x < cols; x++) {
+
+	//Al acabr el pr
+	
+    for (int x = 0; x < fils; x++) {
 		delete[] celdasMapa[x];
     }
 	//esto borra al columna

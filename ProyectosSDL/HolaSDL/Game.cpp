@@ -38,6 +38,7 @@ Game::~Game() {
 
 	delete pacman;
 	delete mapa;//invoca al destructor de mapa y todo lo que lleva consigo
+	for (Ghost* g : ghosts) delete g;
 	for (uint i = 0; i < NUM_TEXTURES; i++) delete textures[i];
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
@@ -177,13 +178,13 @@ int Game::GetNCols() const {
 }
 
 
-//para saber lo que hay en la siguinete casilla dependiendo de la dirección que se le pase
+//para saber lo que hay en la siguinete casilla dependiendo de la dirección que se le pase y la posición actual 
 bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
 	bool celdaVacia = true;
 	Vector2D  nextCell = pos;
 
 
-	//Como el pacman no se puede mover en diagonal, la direccion a la que se va a poder mover
+	//Como el pacman o lo fantasmas no se pueden mover en diagonal, la direccion a la que se van a poder mover
 	//va a ser un 1 o -1 en una dirección perpendicular
 	if (dir.GetY() == -1) {
 		nextCell.SetY((pos.GetY() - 1 + mapa->fils) % mapa->fils);

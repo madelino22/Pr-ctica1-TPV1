@@ -5,6 +5,8 @@
 #include <iostream>
 #include "Game.h"
 #include "Error.h"
+#include "checkML.h"
+
 using namespace std;
 
 using uint = unsigned int;
@@ -29,7 +31,10 @@ int main2() {
 	return 0;
 }
 
+
+
 int main(int argc, char* argv[]){
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	main2();
 	
 	return 0;

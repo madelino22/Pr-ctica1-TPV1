@@ -15,7 +15,7 @@ bool Ghost::comer(Point2D posPacMan) {
 		}
 		//Si son comidos simplemente vuelven a la posición inicial
 		else {
-			posAct = posIni;
+			morir();
 		}
 		
 	}
@@ -24,6 +24,9 @@ bool Ghost::comer(Point2D posPacMan) {
 }
 
 
+void Ghost::morir() {
+	posAct = posIni;
+}
 void Ghost::render() const {
 
 	int casillaH = WIN_HEIGHT / game->GetNFils();
